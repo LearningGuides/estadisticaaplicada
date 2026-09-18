@@ -1,17 +1,9 @@
 ---
-title: a
+title: Pruebas de Hipótesis y Análisis de Regresión
 order: 2
 ---
 
 # Unidad 2. Pruebas de Hipótesis y Análisis de Regresión
-
-## Propósito de la unidad
-
-En esta unidad se estudiarán procedimientos de inferencia estadística que permiten tomar decisiones acerca de parámetros poblacionales a partir de información muestral, así como modelos de regresión que permiten analizar y describir relaciones entre variables.
-
-A lo largo de la unidad se utilizará **R** como herramienta de apoyo para realizar cálculos estadísticos, construir representaciones gráficas, ajustar modelos e interpretar resultados. El propósito no es solamente aprender comandos de R, sino comprender qué procedimiento estadístico debe emplearse, bajo qué condiciones y cómo deben interpretarse sus resultados.
-
----
 
 # A. Pruebas de hipótesis
 
@@ -21,27 +13,14 @@ Una **prueba de hipótesis** es un procedimiento de inferencia estadística que 
 
 La idea fundamental puede representarse como:
 
-**Población → Muestra → Evidencia estadística → Decisión**
+**Población → Muestra → Estadístico → Evidencia → Decisión**
+
+![](../assets/img/2esta1.png)
 
 No observamos normalmente a toda la población. En su lugar, seleccionamos una muestra y utilizamos la información obtenida de ella para evaluar una afirmación acerca de la población.
 
 Por ejemplo, una empresa puede afirmar que el contenido promedio de sus envases es de 500 ml. Para evaluar esa afirmación no necesariamente es conveniente medir todos los envases producidos. Puede seleccionarse una muestra, calcular su media y determinar si los resultados son compatibles con la afirmación de la empresa.
 
-### Sugerencia visual que se mantiene
-
-Utilizar un diagrama conceptual:
-
-**POBLACIÓN**
-↓
-**MUESTRA**
-↓
-**ESTADÍSTICO MUESTRAL**
-↓
-**EVIDENCIA**
-↓
-**DECISIÓN SOBRE LA POBLACIÓN**
-
-El propósito del diagrama es destacar que la conclusión acerca de la población se obtiene indirectamente mediante información muestral. Esta idea constituye la base de la inferencia estadística. 
 
 ---
 
@@ -81,16 +60,7 @@ $$
 
 Por esta razón, las pruebas pueden ser **bilaterales** o **unilaterales**.
 
-### Sugerencia visual que se mantiene
-
-Utilizar un esquema de dos ramas:
-
-**Afirmación sometida a prueba**
-
-↙ **H₀**: afirmación de referencia
-↘ **H₁**: condición alternativa
-
-Este esquema es preferible a generar un gráfico en R porque el objetivo es diferenciar conceptualmente la función de ambas hipótesis. 
+![](../assets/img/2esta4.png)
 
 ---
 
@@ -118,14 +88,7 @@ $$
 
 y representa la capacidad de la prueba para detectar una diferencia o efecto cuando realmente existe. 
 
-### Sugerencia visual que se mantiene
-
-| Realidad / Decisión | No rechazar H₀    | Rechazar H₀       |
-| ------------------- | ----------------- | ----------------- |
-| **H₀ verdadera**    | Decisión correcta | Error tipo I      |
-| **H₀ falsa**        | Error tipo II     | Decisión correcta |
-
-Esta matriz debe mantenerse porque permite visualizar inmediatamente la relación entre la realidad desconocida y la decisión tomada mediante la prueba.
+![](../assets/img/2esta5.png)
 
 ---
 
@@ -145,11 +108,7 @@ El procedimiento general consiste en:
 8. Tomar una decisión estadística.
 9. Interpretar la decisión dentro del contexto del problema.
 
-### Sugerencia visual que se mantiene
-
-**Problema → H₀/H₁ → α → Selección de prueba → Datos → Estadístico → valor p → Decisión → Conclusión**
-
-Este diagrama permite mostrar que ejecutar una función en R representa solamente una parte del procedimiento. 
+![](../assets/img/2esta8.png)
 
 ---
 
@@ -187,7 +146,7 @@ $$
 \alpha=0.05
 $$
 
-```r id="f3f3uk"
+```r 
 # Nivel de significancia
 alpha <- 0.05
 
@@ -217,7 +176,7 @@ $$
 
 ### Visualización en R
 
-```r id="zy1ewq"
+```r 
 # Valores de la distribución
 z <- seq(-4, 4, length.out = 1000)
 densidad <- dnorm(z)
@@ -279,7 +238,7 @@ $$
 
 Tenemos la siguiente muestra:
 
-```r id="ivz5qa"
+```r 
 datos <- c(52, 49, 55, 51, 54,
            50, 53, 56, 48, 52)
 
@@ -290,7 +249,7 @@ length(datos)
 
 Podemos realizar una prueba `t`:
 
-```r id="ohngcw"
+```r 
 resultado <- t.test(
   datos,
   mu = 50,
@@ -313,7 +272,7 @@ R proporciona, entre otros resultados:
 
 La decisión debe compararse con el nivel de significancia establecido.
 
-```r id="kyxphg"
+```r 
 alpha <- 0.05
 
 if (resultado$p.value <= alpha) {
@@ -335,7 +294,7 @@ La prueba considera la diferencia observada entre las medias muestrales, su vari
 
 Supongamos las calificaciones de dos grupos:
 
-```r id="cy8tny"
+```r 
 grupo_A <- c(78, 82, 85, 80,
              79, 84, 81, 83)
 
@@ -358,7 +317,7 @@ $$
 
 ### Prueba en R
 
-```r id="grwh82"
+```r 
 t.test(
   grupo_A,
   grupo_B,
@@ -370,7 +329,7 @@ t.test(
 
 ### Representación gráfica
 
-```r id="mpc8vz"
+```r 
 boxplot(
   grupo_A,
   grupo_B,
@@ -403,7 +362,7 @@ $$
 H_1:p\neq0.50
 $$
 
-```r id="0ubvmg"
+```r 
 exitos <- 62
 n <- 100
 
@@ -413,7 +372,7 @@ prop_muestral
 
 ### Prueba en R
 
-```r id="r7m68h"
+```r 
 prop.test(
   x = exitos,
   n = n,
@@ -425,7 +384,7 @@ prop.test(
 
 ### Representación gráfica
 
-```r id="0hksqi"
+```r 
 proporciones <- c(
   "Hipótesis" = 0.50,
   "Muestra" = prop_muestral
@@ -449,7 +408,7 @@ Ahora supongamos dos poblaciones.
 
 En el primer grupo se observan 62 casos de 100 y en el segundo 48 casos de 100.
 
-```r id="uv3u78"
+```r 
 exitos <- c(62, 48)
 n <- c(100, 100)
 
@@ -460,7 +419,7 @@ proporciones
 
 La prueba evalúa si las proporciones poblacionales pueden considerarse iguales. Este procedimiento corresponde a la comparación descrita en la lección entre una característica binaria observada en dos poblaciones. 
 
-```r id="65etb3"
+```r 
 prop.test(
   x = exitos,
   n = n,
@@ -471,7 +430,7 @@ prop.test(
 
 ### Visualización
 
-```r id="dzvyug"
+```r 
 barplot(
   proporciones,
   names.arg = c("Grupo 1", "Grupo 2"),
@@ -503,7 +462,7 @@ Este planteamiento corresponde a la prueba de una varianza descrita en la lecci�
 
 ### Ejemplo en R
 
-```r id="kx2opz"
+```r 
 datos <- c(18, 22, 20, 19, 24,
            21, 23, 20, 19, 22)
 
@@ -520,7 +479,7 @@ chi2
 
 Para una prueba bilateral:
 
-```r id="x7cazm"
+```r 
 gl <- n - 1
 
 p_inferior <- pchisq(chi2, df = gl)
@@ -533,7 +492,7 @@ p_valor
 
 La decisión puede obtenerse mediante:
 
-```r id="xy25ph"
+```r 
 alpha <- 0.05
 
 if (p_valor <= alpha) {
@@ -576,7 +535,7 @@ El modelo permite describir la relación y utilizar valores de `X` para estimar 
 
 Para los siguientes ejemplos utilizaremos el mismo conjunto de datos:
 
-```r id="tzg3m3"
+```r 
 datos <- data.frame(
   horas = c(1, 2, 2, 3, 4,
             4, 5, 6, 7, 8),
@@ -589,7 +548,7 @@ datos
 
 Primero representamos los datos:
 
-```r id="qzt40s"
+```r 
 plot(
   datos$horas,
   datos$calificacion,
@@ -602,7 +561,7 @@ plot(
 
 Ajustamos una recta:
 
-```r id="v4k25a"
+```r 
 modelo <- lm(calificacion ~ horas,
              data = datos)
 
@@ -625,7 +584,7 @@ Una correlación elevada no demuestra por sí misma una relación causal.
 
 Podemos calcular la correlación entre las horas de estudio y la calificación:
 
-```r id="36nzhz"
+```r 
 cor(
   datos$horas,
   datos$calificacion
@@ -634,7 +593,7 @@ cor(
 
 También podemos estudiar distintos patrones.
 
-```r id="gbuhnk"
+```r 
 set.seed(123)
 
 x <- 1:30
@@ -662,7 +621,7 @@ par(mfrow = c(1, 1))
 
 Compare ahora:
 
-```r id="6owcnd"
+```r 
 cor(x, y_positiva)
 cor(x, y_negativa)
 cor(x, y_nula)
@@ -690,7 +649,7 @@ La pendiente representa el cambio esperado en `Y` asociado con un incremento de 
 
 Ajustamos el modelo:
 
-```r id="2wttis"
+```r 
 modelo <- lm(
   calificacion ~ horas,
   data = datos
@@ -701,7 +660,7 @@ coef(modelo)
 
 También podemos utilizar:
 
-```r id="o4ld7p"
+```r 
 summary(modelo)
 ```
 
@@ -709,7 +668,7 @@ El resultado correspondiente a `(Intercept)` estima `β₀`, mientras que el coe
 
 ### Representación
 
-```r id="21drvg"
+```r 
 plot(
   datos$horas,
   datos$calificacion,
@@ -741,7 +700,7 @@ Es decir, un residuo representa la diferencia entre el valor observado y el valo
 
 Podemos obtenerlos en R:
 
-```r id="3yd6i8"
+```r 
 residuos <- residuals(modelo)
 
 residuos
@@ -749,7 +708,7 @@ residuos
 
 Los valores estimados son:
 
-```r id="jnyn0w"
+```r 
 estimados <- fitted(modelo)
 
 estimados
@@ -757,7 +716,7 @@ estimados
 
 ### Visualización de los residuos sobre la recta
 
-```r id="w48hbj"
+```r 
 plot(
   datos$horas,
   datos$calificacion,
@@ -794,7 +753,7 @@ Valores positivos indican asociación positiva y valores negativos indican asoci
 
 Valores cercanos a cero indican poca asociación **lineal**, aunque esto no significa necesariamente ausencia de cualquier tipo de relación. 
 
-```r id="xewcsi"
+```r 
 r <- cor(
   datos$horas,
   datos$calificacion
@@ -805,7 +764,7 @@ r
 
 El coeficiente también puede obtenerse con una prueba de correlación:
 
-```r id="wbcrx9"
+```r 
 cor.test(
   datos$horas,
   datos$calificacion
@@ -828,7 +787,7 @@ Sus valores normalmente se encuentran entre 0 y 1. Sin embargo, un `R²` elevado
 
 En R:
 
-```r id="g08m9v"
+```r 
 resumen <- summary(modelo)
 
 resumen$r.squared
@@ -836,7 +795,7 @@ resumen$r.squared
 
 Para expresarlo como porcentaje:
 
-```r id="cucvg7"
+```r 
 resumen$r.squared * 100
 ```
 
@@ -852,13 +811,13 @@ El error estándar de la regresión representa la dispersión típica de las obs
 
 En R se obtiene mediante:
 
-```r id="6xv9wc"
+```r 
 summary(modelo)$sigma
 ```
 
 También podemos observar directamente los residuos:
 
-```r id="fq4dhy"
+```r 
 plot(
   fitted(modelo),
   residuals(modelo),
@@ -883,7 +842,7 @@ El intervalo de predicción suele ser más amplio porque incorpora variabilidad 
 
 Supongamos que queremos estudiar una persona que dedica cinco horas al estudio.
 
-```r id="cwmwcm"
+```r 
 nuevo <- data.frame(
   horas = 5
 )
@@ -891,7 +850,7 @@ nuevo <- data.frame(
 
 ### Intervalo de confianza
 
-```r id="43hv3g"
+```r 
 predict(
   modelo,
   newdata = nuevo,
@@ -902,7 +861,7 @@ predict(
 
 ### Intervalo de predicción
 
-```r id="zvjz8v"
+```r 
 predict(
   modelo,
   newdata = nuevo,
@@ -915,7 +874,7 @@ Compare la amplitud de ambos intervalos.
 
 ### Representación gráfica
 
-```r id="qqvrcs"
+```r 
 nuevos <- data.frame(
   horas = seq(1, 8, length.out = 100)
 )
@@ -960,7 +919,7 @@ Una prueba `F` permite evaluar si existe evidencia estadística de una relación
 
 En R:
 
-```r id="efwbwp"
+```r 
 anova(modelo)
 ```
 
@@ -974,7 +933,7 @@ La tabla permite examinar:
 
 Podemos compararla con:
 
-```r id="xxoyge"
+```r 
 summary(modelo)
 ```
 
@@ -994,7 +953,7 @@ Entre los aspectos que deben examinarse se encuentran la linealidad, independenc
 
 R permite producir los gráficos diagnósticos mediante:
 
-```r id="rx3b51"
+```r 
 par(mfrow = c(2, 2))
 
 plot(modelo)
@@ -1023,7 +982,7 @@ Esta necesidad de utilizar diferentes formas funcionales es la idea central de l
 
 Construiremos un ejemplo:
 
-```r id="u7wue3"
+```r 
 x <- 1:10
 
 y <- c(
@@ -1036,7 +995,7 @@ datos_nl <- data.frame(x, y)
 
 Observamos los datos:
 
-```r id="pm6qqt"
+```r 
 plot(
   datos_nl$x,
   datos_nl$y,
@@ -1065,7 +1024,7 @@ $$
 
 En R:
 
-```r id="fh9a8s"
+```r 
 modelo_nl <- nls(
   y ~ a * exp(b * x),
   data = datos_nl,
@@ -1082,7 +1041,7 @@ Los valores incluidos en `start` son valores iniciales utilizados por el procedi
 
 ### Visualización del ajuste
 
-```r id="3qk99r"
+```r 
 plot(
   datos_nl$x,
   datos_nl$y,
@@ -1120,7 +1079,7 @@ Sin embargo, ninguna medida aislada determina la calidad total del modelo. El an
 
 Podemos obtener los residuos:
 
-```r id="4nd01k"
+```r 
 residuos_nl <- residuals(modelo_nl)
 
 residuos_nl
@@ -1128,7 +1087,7 @@ residuos_nl
 
 Y calcular su suma de cuadrados:
 
-```r id="6g3k4e"
+```r 
 SSE <- sum(residuos_nl^2)
 
 SSE
@@ -1136,7 +1095,7 @@ SSE
 
 Una medida del error residual puede calcularse considerando los grados de libertad:
 
-```r id="88pvxf"
+```r 
 n <- nrow(datos_nl)
 p <- length(coef(modelo_nl))
 
@@ -1163,18 +1122,7 @@ Conceptualmente:
 
 La amplitud de estas bandas puede cambiar a lo largo del dominio de la curva. 
 
-### Sugerencia visual que se mantiene
-
-En esta parte conviene **mantener inicialmente el esquema conceptual de una curva rodeada por dos bandas**, antes de implementar métodos específicos de construcción de intervalos para un modelo no lineal.
-
-Esto evita presentar un procedimiento de R como si existiera una única forma universal de obtener esos intervalos para todos los modelos no lineales.
-
-El esquema debe mostrar:
-
-**Banda exterior:** intervalo de predicción
-**Banda interior:** intervalo de confianza
-**Centro:** curva estimada
-
+![](../assets/img/2esta3.png)
 ---
 
 # 5. Análisis de varianza para la regresión
@@ -1183,17 +1131,7 @@ En los modelos no lineales también puede estudiarse cuánto del comportamiento 
 
 Sin embargo, la interpretación depende de la estructura particular del modelo y de los supuestos utilizados. 
 
-### Sugerencia visual que se mantiene
-
-Utilizar el esquema:
-
-**Variabilidad observada**
-
-↙ **Componente representado por el modelo**
-
-↘ **Componente residual**
-
-En este apartado es preferible mantener el esquema conceptual y posteriormente introducir procedimientos específicos de comparación de modelos cuando se hayan establecido sus características y supuestos.
+![](../assets/img/2esta2.png)
 
 ---
 
@@ -1212,7 +1150,7 @@ Esta función diagnóstica de los residuos es enfatizada en la lección original
 
 ### Análisis en R
 
-```r id="kqxwr7"
+```r 
 plot(
   fitted(modelo_nl),
   residuals(modelo_nl),
@@ -1243,21 +1181,12 @@ $$
 
 Cada coeficiente representa el cambio esperado en `Y` asociado con un predictor cuando las demás variables incluidas en el modelo se mantienen constantes. 
 
-### Sugerencia visual que se mantiene
+![](../assets/img/2esta7.png)
 
-```text
-X₁ ──┐
-     │
-X₂ ──┼──→ Y
-     │
-X₃ ──┘
-```
-
-Este esquema permite introducir el carácter multivariable del modelo antes de realizar los cálculos.
 
 Para los ejemplos utilizaremos el conjunto `mtcars`, incluido en R.
 
-```r id="sbtzhv"
+```r 
 datos_multi <- mtcars
 
 head(datos_multi)
@@ -1279,7 +1208,7 @@ Esto permite estimar la contribución estadística de cada predictor considerand
 
 Ajustamos:
 
-```r id="35pr0k"
+```r 
 modelo_multiple <- lm(
   mpg ~ wt + hp + disp,
   data = datos_multi
@@ -1290,7 +1219,7 @@ summary(modelo_multiple)
 
 Los coeficientes pueden obtenerse directamente:
 
-```r id="6k1awz"
+```r 
 coef(modelo_multiple)
 ```
 
@@ -1306,7 +1235,7 @@ Una asociación elevada entre variables explicativas puede dificultar la estimac
 
 Podemos construir una matriz de correlaciones:
 
-```r id="woxpc6"
+```r 
 predictores <- datos_multi[
   c("wt", "hp", "disp")
 ]
@@ -1316,7 +1245,7 @@ cor(predictores)
 
 ### Visualización en R
 
-```r id="p3i3uw"
+```r 
 pairs(
   predictores,
   pch = 19,
@@ -1344,7 +1273,7 @@ que incorpora una penalización relacionada con la cantidad de predictores. Esta
 
 En R:
 
-```r id="bfsmw1"
+```r 
 resumen_multiple <- summary(
   modelo_multiple
 )
@@ -1358,7 +1287,7 @@ resumen_multiple$adj.r.squared
 
 Podemos comparar modelos:
 
-```r id="g8h9fh"
+```r 
 modelo_1 <- lm(
   mpg ~ wt,
   data = datos_multi
@@ -1377,7 +1306,7 @@ modelo_3 <- lm(
 
 Extraemos ambos indicadores:
 
-```r id="znc74m"
+```r 
 comparacion <- data.frame(
   Modelo = c(
     "wt",
@@ -1415,13 +1344,13 @@ El error estándar representa la magnitud típica de las diferencias entre los v
 
 Podemos obtenerlo mediante:
 
-```r id="l9s7vh"
+```r 
 summary(modelo_multiple)$sigma
 ```
 
 Y examinar la distribución de los residuos:
 
-```r id="xg2p75"
+```r 
 hist(
   residuals(modelo_multiple),
   main = "Distribución de los residuos",
@@ -1431,7 +1360,7 @@ hist(
 
 También es conveniente observar residuos contra valores ajustados:
 
-```r id="whgsrm"
+```r 
 plot(
   fitted(modelo_multiple),
   residuals(modelo_multiple),
@@ -1454,7 +1383,7 @@ Cada intervalo muestra un conjunto de valores compatibles con los datos y con el
 
 En R:
 
-```r id="6l9pvs"
+```r 
 confint(
   modelo_multiple,
   level = 0.95
@@ -1463,7 +1392,7 @@ confint(
 
 Podemos representar los coeficientes gráficamente.
 
-```r id="ed78xm"
+```r 
 coeficientes <- coef(modelo_multiple)[-1]
 
 intervalos <- confint(
@@ -1508,11 +1437,14 @@ La línea vertical en cero proporciona una referencia útil para interpretar los
 
 Finalmente, un modelo múltiple puede utilizarse para predecir la respuesta correspondiente a una combinación determinada de valores de los predictores.
 
+
+![](../assets/img/2esta6.png)
+
 El intervalo de predicción incorpora tanto la incertidumbre de la respuesta estimada como la variabilidad correspondiente a una nueva observación. 
 
 Supongamos un automóvil con:
 
-```r id="d3wt9a"
+```r 
 nuevo_auto <- data.frame(
   wt = 3.0,
   hp = 120,
@@ -1524,7 +1456,7 @@ nuevo_auto
 
 Obtenemos una predicción puntual:
 
-```r id="t5a76c"
+```r 
 predict(
   modelo_multiple,
   newdata = nuevo_auto
@@ -1533,7 +1465,7 @@ predict(
 
 Y un intervalo de predicción:
 
-```r id="gj63ai"
+```r 
 predict(
   modelo_multiple,
   newdata = nuevo_auto,
@@ -1541,99 +1473,3 @@ predict(
   level = 0.95
 )
 ```
-
-### Sugerencia visual que se mantiene
-
-Para cerrar el tema conviene conservar el esquema conceptual original:
-
-```text
-X₁ = valor
-X₂ = valor
-X₃ = valor
-    │
-    ▼
-MODELO DE REGRESIÓN
-    │
-    ▼
-Predicción puntual
-    │
-    ▼
-Intervalo de predicción
-```
-
-El esquema ayuda a comprender que la predicción final resulta de una **combinación simultánea de las características introducidas al modelo**.
-
----
-
-# Actividad integradora de la Unidad 2
-
-Para cerrar la unidad, el estudiante puede trabajar con un conjunto de datos diferente y realizar un análisis completo en R.
-
-## Parte 1. Pruebas de hipótesis
-
-Seleccione una variable cuantitativa y:
-
-1. formule `H₀` y `H₁`;
-2. establezca `α`;
-3. seleccione una prueba apropiada;
-4. ejecute la prueba en R;
-5. identifique el estadístico de prueba;
-6. identifique el valor p;
-7. tome una decisión respecto de `H₀`;
-8. redacte una conclusión contextual.
-
-## Parte 2. Regresión
-
-Seleccione una variable respuesta cuantitativa y al menos una variable explicativa.
-
-Construya primero un diagrama de dispersión:
-
-```r id="q4wmqg"
-plot(
-  x,
-  y,
-  pch = 19,
-  xlab = "Variable explicativa",
-  ylab = "Variable respuesta"
-)
-```
-
-Ajuste posteriormente un modelo:
-
-```r id="41rb29"
-modelo <- lm(y ~ x)
-
-summary(modelo)
-```
-
-Examine:
-
-```r id="rqblm7"
-coef(modelo)
-summary(modelo)$r.squared
-summary(modelo)$sigma
-```
-
-Finalmente, realice un análisis de los residuos:
-
-```r id="pn95x1"
-par(mfrow = c(2, 2))
-
-plot(modelo)
-
-par(mfrow = c(1, 1))
-```
-
-El informe final deberá explicar los resultados **en términos del problema analizado**, no limitarse a copiar la salida proporcionada por R.
-
-# Cierre de la unidad
-
-Las pruebas de hipótesis y los modelos de regresión responden a preguntas diferentes, pero forman parte del mismo proceso general de razonamiento estadístico.
-
-En una prueba de hipótesis, el objetivo consiste en determinar si los datos proporcionan evidencia suficiente contra una afirmación establecida acerca de una población.
-
-En regresión, el propósito consiste en representar y estudiar la relación entre una variable respuesta y una o más variables explicativas.
-
-R permite automatizar los cálculos y producir representaciones gráficas, pero la responsabilidad principal permanece en el analista:
-
-**plantear correctamente el problema → seleccionar el procedimiento → verificar sus condiciones → ejecutar el análisis → interpretar los resultados → comunicar una conclusión estadísticamente adecuada.**
