@@ -1,0 +1,700 @@
+---
+title: Pruebas de Hipótesis y Análisis de Regresión
+order: 4
+---
+
+# Pruebas de hipótesis y regresión en R
+
+## Lección 1. Pruebas de hipótesis
+
+### i. Introducción
+
+Una prueba de hipótesis es un procedimiento estadístico que permite utilizar los datos obtenidos de una muestra para evaluar una afirmación acerca de una población. Generalmente se parte de una afirmación inicial, denominada **hipótesis nula ($H_0$)**, y se analiza si existe suficiente evidencia estadística para rechazarla.
+
+Uno de los elementos principales es el **p-value**. Si se trabaja con un nivel de significancia de 0.05 y el p-value es menor que 0.05, normalmente se rechaza la hipótesis nula.
+
+Una cafetería afirma que el tiempo promedio de preparación de sus pedidos es de **12 minutos**. Se seleccionan 8 pedidos al azar y se registran sus tiempos. Se desea determinar si los datos son compatibles con la afirmación de la cafetería.
+
+```r
+datos <- c(10, 12, 11, 13, 12, 14, 10, 13)
+
+mean(datos)
+sd(datos)
+length(datos)
+
+t.test(datos, mu = 12)
+```
+
+
+La interpretación de cada resultado es:
+
+* **`t = -0.24254`**: es el estadístico de prueba. El valor es cercano a 0, lo que indica que la media observada está bastante cerca de la media propuesta de 12.
+* **`df = 7`**: son los grados de libertad. En una prueba t de una muestra, $df=n-1$, por lo que aquí se utilizaron **8 observaciones**.
+* **`p-value = 0.8153`**: es el resultado clave. Como $0.8153 > 0.05$, usando un nivel de significancia de 5%, **no se rechaza $H_0$**. No hay evidencia estadística suficiente para concluir que la media poblacional sea diferente de 12.
+* **`alternative hypothesis: true mean is not equal to 12`**: confirma que se realizó una prueba **bilateral**, es decir, se buscaba detectar tanto si la media era mayor como si era menor que 12.
+* **Intervalo de confianza del 95%: $[10.6563,\ 13.0937]$**: el valor 12 está dentro del intervalo. Esto es coherente con no rechazar $H_0$.
+* **`mean of x = 11.875`**: la media de la muestra fue **11.875**. Aunque no es exactamente 12, la diferencia es pequeña y puede explicarse por variabilidad muestral.
+
+
+---
+
+### ii. Hipótesis estadística
+
+Una hipótesis estadística es una afirmación acerca de algún parámetro de una población, como su media, proporción o varianza.
+
+Se plantean normalmente dos hipótesis:
+
+$$
+H_0 = \text{Hipótesis nula}
+$$
+
+$$
+H_1 = \text{Hipótesis alternativa}
+$$
+
+La hipótesis nula representa la afirmación que se somete a prueba. La alternativa representa la posibilidad que se considera cuando los datos proporcionan suficiente evidencia contra $H_0$.
+
+Una empresa afirma que sus baterías tienen una duración promedio de **50 horas**. Se toma una muestra de 8 baterías para determinar si existe evidencia de que la duración promedio es diferente de 50 horas.
+
+$$
+H_0:\mu=50
+$$
+
+$$
+H_1:\mu\neq50
+$$
+
+```r
+muestra <- c(48, 51, 52, 49, 53, 50, 54, 52)
+
+t.test(
+  muestra,
+  mu = 50,
+  alternative = "two.sided"
+)
+```
+
+---
+
+### iii. Tipos de errores
+
+Debido a que una prueba de hipótesis utiliza información de una muestra, existe la posibilidad de tomar una decisión incorrecta.
+
+El **error tipo I** ocurre cuando se rechaza $H_0$ aunque sea verdadera. Su probabilidad se representa mediante $\alpha$.
+
+El **error tipo II** ocurre cuando no se rechaza $H_0$ aunque sea falsa. Su probabilidad se representa mediante $\beta$.
+
+La **potencia estadística** representa la capacidad de una prueba para detectar una diferencia cuando realmente existe:
+
+$$
+Potencia=1-\beta
+$$
+
+En un proceso de control de calidad se establece un nivel de significancia de **5 %**. Además, se estima una probabilidad de **20 %** de no detectar una diferencia real cuando esta existe. Determine el error tipo I, el error tipo II y la potencia.
+
+```r
+alpha <- 0.05
+beta <- 0.20
+
+potencia <- 1 - beta
+
+alpha
+beta
+potencia
+```
+
+---
+
+### iv. Formulación y pruebas de hipótesis
+
+Para realizar una prueba de hipótesis se sigue una secuencia básica: formular $H_0$ y $H_1$, establecer el nivel de significancia, seleccionar la prueba estadística, calcular el p-value y finalmente tomar una decisión.
+
+> #### p-value
+> Se lanza la moneda 100 veces y salen 65 caras. Si la moneda realmente fuera justa, lo esperado sería alrededor de 50 caras.
+> 
+> Entonces, el **p-value** responde a algo parecido a:
+>
+>> *Si la moneda fuera justa, ¿qué probabilidad habría de obtener un resultado tan extremo como 65 caras*
+>
+> Dependiendo de la hipótesis alternativa, "tan extremo o más extremo" podría significar obtener 65 o más caras y, en una prueba bilateral, también resultados igualmente alejados hacia el otro lado, como 35 o menos caras.
+> 
+> Si esa probabilidad resulta muy pequeña, por ejemplo:
+> 
+> $$ p=0.002 $$
+> 
+> significa que si $H_0$ fuera cierta, resultados como el observado o todavía más extremos serían muy poco frecuentes.
+> 
+> Por eso un p-value pequeño proporciona evidencia contra $H_0$.
+> Si:
+> 
+> $$
+> \text{p-value} < \alpha
+> $$
+>
+> se rechaza $H_0$. En caso contrario, **no se rechaza $H_0$**.
+
+Una máquina debe producir paquetes con un peso promedio de **100 gramos**. Se sospecha que está colocando una cantidad superior. Se toma una muestra de 8 paquetes. Con un nivel de significancia de 5 %, determine si existe evidencia de que el peso promedio supera los 100 gramos.
+
+$$
+H_0:\mu=100
+$$
+
+$$
+H_1:\mu>100
+$$
+
+```r
+datos <- c(102, 105, 98, 107, 110, 103, 104, 106)
+
+resultado <- t.test(
+  datos,
+  mu = 100,
+  alternative = "greater"
+)
+
+resultado
+
+alpha <- 0.05
+
+if(resultado$p.value < alpha) {
+  print("Se rechaza H0")
+} else {
+  print("No se rechaza H0")
+}
+```
+
+---
+
+### v. Prueba de hipótesis para la media
+
+Una prueba para la media permite determinar si la media de una población puede considerarse igual, mayor, menor o diferente de un valor específico. Cuando la desviación estándar poblacional es desconocida, suele utilizarse la **prueba t de Student**.
+
+En R se puede realizar mediante `t.test()`.
+
+Una empresa de entregas establece que el tiempo promedio para completar una entrega es de **30 minutos**. Se registran los tiempos de 10 entregas. Determine, con $\alpha=0.05$, si existe evidencia de que el tiempo promedio es diferente de 30 minutos.
+
+$$
+H_0:\mu=30
+$$
+
+$$
+H_1:\mu\neq30
+$$
+
+```r
+tiempos <- c(32, 31, 29, 35, 34, 30, 33, 32, 36, 31)
+
+t.test(
+  tiempos,
+  mu = 30,
+  alternative = "two.sided",
+  conf.level = 0.95
+)
+```
+
+---
+
+### vi. Prueba para la diferencia de medias
+
+Esta prueba se utiliza cuando se desea comparar dos grupos. Por ejemplo, puede emplearse para comparar calificaciones, tiempos, pesos o rendimientos.
+
+La hipótesis nula establece normalmente que no existe diferencia entre las medias:
+
+$$
+H_0:\mu_A=\mu_B
+$$
+
+La alternativa establece que existe diferencia:
+
+$$
+H_1:\mu_A\neq\mu_B
+$$
+
+Se desea comparar el desempeño de estudiantes que utilizaron **dos métodos de enseñanza diferentes**. Se registran las calificaciones de los grupos A y B. Determine si existe una diferencia estadísticamente significativa entre las calificaciones promedio.
+
+```r
+grupo_A <- c(80, 85, 88, 90, 84, 87, 86)
+grupo_B <- c(75, 78, 82, 79, 81, 77, 80)
+
+t.test(
+  grupo_A,
+  grupo_B,
+  alternative = "two.sided"
+)
+```
+
+---
+
+### vii. Prueba de hipótesis para la proporción
+
+Una proporción representa la parte de una población que posee determinada característica. Por ejemplo, la proporción de clientes satisfechos, productos defectuosos o estudiantes aprobados.
+
+En R, `prop.test()` permite realizar pruebas relacionadas con proporciones.
+
+Una empresa considera que **50 % de sus clientes** prefiere comprar mediante su aplicación móvil. En una encuesta a 100 clientes, 62 indican que prefieren utilizarla. Determine si existe evidencia de que la proporción real es diferente del 50 %.
+
+$$
+H_0:p=0.50
+$$
+
+$$
+H_1:p\neq0.50
+$$
+
+```r
+prop.test(
+  x = 62,
+  n = 100,
+  p = 0.50,
+  alternative = "two.sided",
+  correct = FALSE
+)
+```
+
+---
+
+### viii. Prueba para la diferencia de proporciones
+
+Esta prueba determina si dos grupos presentan proporciones estadísticamente diferentes. Es útil, por ejemplo, para comparar tasas de aprobación, porcentajes de compra o proporciones de productos defectuosos.
+
+Una tienda realiza dos campañas publicitarias. Con la campaña A, **70 de 100 clientes** compraron un producto. Con la campaña B, **55 de 100 clientes** realizaron una compra. Determine si las proporciones de compra son significativamente diferentes.
+
+```r
+exitos <- c(70, 55)
+totales <- c(100, 100)
+
+prop.test(
+  exitos,
+  totales,
+  correct = FALSE
+)
+```
+
+---
+
+### ix. Prueba de hipótesis para la varianza
+
+La varianza indica qué tan dispersos se encuentran los datos respecto de su media. Comparar varianzas resulta especialmente útil en procesos industriales, donde interesa saber si dos máquinas tienen la misma estabilidad o precisión.
+
+Para dos poblaciones normales, R permite utilizar `var.test()`.
+
+Dos máquinas fabrican piezas del mismo tipo. Se desea determinar si presentan la **misma variabilidad en sus mediciones**. Se toma una muestra de cada máquina y se comparan sus varianzas.
+
+$$
+H_0:\sigma_A^2=\sigma_B^2
+$$
+
+$$
+H_1:\sigma_A^2\neq\sigma_B^2
+$$
+
+```r
+grupo_A <- c(10, 12, 11, 13, 12, 14, 11, 13)
+grupo_B <- c(8, 15, 10, 16, 9, 14, 11, 17)
+
+var(grupo_A)
+var(grupo_B)
+
+var.test(grupo_A, grupo_B)
+```
+
+---
+
+
+# Lección 2. Regresión lineal
+
+### i. Introducción
+
+La regresión lineal permite estudiar cómo cambia una variable dependiente $Y$ cuando cambia una variable independiente $X$.
+
+Su forma general es:
+
+$$
+Y=\beta_0+\beta_1X+\epsilon
+$$
+
+donde $\beta_0$ representa el intercepto, $\beta_1$ la pendiente y $\epsilon$ el error aleatorio.
+
+Un profesor desea estudiar si existe relación entre las **horas de estudio** y la **calificación obtenida**. Se registran ambas variables para 8 estudiantes. Construya un modelo de regresión lineal.
+
+```r
+horas <- c(1, 2, 3, 4, 5, 6, 7, 8)
+calificacion <- c(55, 60, 65, 70, 72, 78, 85, 90)
+
+modelo <- lm(calificacion ~ horas)
+
+summary(modelo)
+```
+
+---
+
+### ii. Regresión lineal y correlación
+
+La correlación mide la **dirección y fuerza de la relación lineal** entre dos variables. El coeficiente de correlación $r$ se encuentra entre -1 y 1.
+
+Un valor próximo a 1 indica una relación positiva fuerte; próximo a -1, una relación negativa fuerte; y próximo a 0 indica poca relación lineal.
+
+Una empresa analiza la relación entre la cantidad de publicidad realizada (`x`) y las ventas obtenidas (`y`). Calcule la correlación y construya el modelo de regresión.
+
+```r
+x <- c(1, 2, 3, 4, 5, 6)
+y <- c(3, 5, 7, 8, 11, 12)
+
+cor(x, y)
+
+modelo <- lm(y ~ x)
+
+summary(modelo)
+
+plot(x, y)
+abline(modelo)
+```
+
+---
+
+### iii. Método de mínimos cuadrados
+
+El método de mínimos cuadrados encuentra los coeficientes de la regresión buscando que la suma de los errores al cuadrado sea lo más pequeña posible:
+
+$$
+\sum(y_i-\hat{y}_i)^2
+$$
+
+La diferencia entre un valor observado y uno estimado se denomina **residuo**.
+
+A partir de cinco pares de observaciones, obtenga la ecuación de regresión, los valores estimados, los residuos y la suma de cuadrados de los errores.
+
+```r
+x <- c(1, 2, 3, 4, 5)
+y <- c(2, 4, 5, 8, 10)
+
+modelo <- lm(y ~ x)
+
+coef(modelo)
+fitted(modelo)
+residuals(modelo)
+
+sum(residuals(modelo)^2)
+```
+
+---
+
+### iv. Coeficientes de correlación, determinación y error estándar
+
+El coeficiente de correlación $r$ mide la relación lineal. El coeficiente de determinación $R^2$ representa la proporción de variabilidad de $Y$ explicada por el modelo.
+
+Por ejemplo, un $R^2=0.80$ indica que el modelo explica aproximadamente el 80 % de la variabilidad observada en la variable dependiente. El error estándar residual proporciona información sobre el tamaño típico de los errores del modelo.
+
+Calcule el coeficiente de correlación, $R^2$ y el error estándar residual para los siguientes datos.
+
+```r
+x <- c(1, 2, 3, 4, 5, 6)
+y <- c(3, 5, 6, 9, 11, 13)
+
+modelo <- lm(y ~ x)
+
+cor(x, y)
+
+summary(modelo)$r.squared
+summary(modelo)$sigma
+
+summary(modelo)
+```
+
+---
+
+### v. Intervalos de confianza y predicción
+
+Un **intervalo de confianza** estima el valor medio esperado de la respuesta para determinado valor de $X$. Un **intervalo de predicción** estima el rango en el que podría encontrarse una nueva observación individual.
+
+El intervalo de predicción suele ser más amplio porque incorpora mayor incertidumbre.
+
+Utilizando la relación entre horas de estudio y calificación, estime la calificación correspondiente a **8 horas de estudio** y obtenga los intervalos de confianza y predicción.
+
+```r
+horas <- c(1, 2, 3, 4, 5, 6, 7)
+nota <- c(55, 60, 64, 70, 76, 82, 88)
+
+modelo <- lm(nota ~ horas)
+
+nuevo <- data.frame(horas = 8)
+
+predict(
+  modelo,
+  nuevo,
+  interval = "confidence"
+)
+
+predict(
+  modelo,
+  nuevo,
+  interval = "prediction"
+)
+```
+
+---
+
+### vi. Análisis de varianza para la regresión
+
+El análisis de varianza o **ANOVA** permite separar la variabilidad explicada por la regresión de la variabilidad que permanece en los errores.
+
+En R, `anova(modelo)` genera una tabla que contiene sumas de cuadrados, grados de libertad, estadístico F y p-value.
+
+Determine mediante ANOVA si existe evidencia estadística de una relación lineal significativa entre `x` y `y`.
+
+```r
+x <- c(1, 2, 3, 4, 5, 6, 7)
+y <- c(10, 15, 18, 23, 27, 31, 35)
+
+modelo <- lm(y ~ x)
+
+anova(modelo)
+```
+
+---
+
+### vii. Análisis de residuales
+
+Los residuos representan las diferencias entre los valores observados y los valores predichos:
+
+$$
+e_i=y_i-\hat{y}_i
+$$
+
+Una gráfica de residuos permite identificar patrones, valores atípicos y posibles problemas con los supuestos de la regresión. Idealmente, los residuos deberían distribuirse sin un patrón sistemático alrededor de cero.
+
+Construya un modelo de regresión y represente los residuos frente a los valores ajustados para determinar visualmente si existe algún patrón.
+
+```r
+x <- 1:10
+y <- c(5, 7, 9, 10, 13, 15, 17, 18, 21, 23)
+
+modelo <- lm(y ~ x)
+
+residuals(modelo)
+
+plot(
+  fitted(modelo),
+  residuals(modelo),
+  xlab = "Valores ajustados",
+  ylab = "Residuos"
+)
+
+abline(h = 0)
+
+plot(modelo)
+```
+
+# Lección 3. Regresión no lineal
+
+### i. Método de mínimos cuadrados
+
+No todas las relaciones entre variables son lineales. Algunas presentan comportamientos exponenciales, logarítmicos o de otros tipos. La regresión no lineal permite estimar los parámetros de estas funciones.
+
+En R puede utilizarse `nls()`, que significa **nonlinear least squares**.
+
+El crecimiento de una población de microorganismos parece seguir un comportamiento exponencial. Ajuste el modelo:
+
+$$
+y=ae^{bx}
+$$
+
+utilizando mínimos cuadrados no lineales.
+
+```r
+x <- 1:8
+y <- c(3.1, 4.4, 6.0, 8.2, 11.1, 15.2, 20.4, 27.5)
+
+modelo_nl <- nls(
+  y ~ a * exp(b * x),
+  start = list(a = 2, b = 0.3)
+)
+
+summary(modelo_nl)
+
+coef(modelo_nl)
+```
+
+---
+
+### ii. Coeficientes de correlación, determinación y error estándar
+
+Después de ajustar el modelo pueden compararse los valores observados con los valores estimados. También puede calcularse una medida de $R^2$ a partir de las sumas de cuadrados para describir el ajuste en este ejemplo.
+
+El error estándar residual ayuda a cuantificar la magnitud de los errores producidos por el modelo.
+
+Utilizando el modelo exponencial anterior, determine la correlación entre valores reales y estimados, calcule $R^2$ y obtenga el error estándar residual.
+
+```r
+pred <- predict(modelo_nl)
+
+cor(y, pred)
+
+SSE <- sum((y - pred)^2)
+SST <- sum((y - mean(y))^2)
+
+R2 <- 1 - SSE / SST
+R2
+
+n <- length(y)
+p <- length(coef(modelo_nl))
+
+error_estandar <- sqrt(SSE / (n - p))
+error_estandar
+```
+
+---
+
+### iii. Intervalos de confianza y predicción
+
+Los parámetros obtenidos mediante regresión son estimaciones realizadas a partir de una muestra. Por esta razón, pueden calcularse intervalos de confianza para mostrar un rango de valores plausibles para los parámetros.
+
+También pueden obtenerse predicciones puntuales para nuevos valores de la variable independiente.
+
+Obtenga los intervalos de confianza de los parámetros del modelo exponencial y estime el valor de `y` cuando `x = 9`.
+
+```r
+confint(modelo_nl)
+
+nuevo <- data.frame(x = 9)
+
+predict(modelo_nl, newdata = nuevo)
+```
+
+---
+
+### iv. Análisis de varianza para la regresión
+
+Cuando se tienen modelos anidados, puede analizarse si permitir parámetros adicionales produce una mejora estadísticamente significativa en el ajuste.
+
+Esta comparación debe realizarse entre modelos apropiadamente relacionados; no cualquier par de modelos puede compararse directamente mediante ANOVA.
+
+Compare un modelo exponencial en el que se estiman `a` y `b` con otro donde `b` se fija en 0.4. Determine si permitir la estimación adicional de `b` mejora el ajuste.
+
+```r
+modelo1 <- nls(
+  y ~ a * exp(b * x),
+  start = list(a = 2, b = 0.3)
+)
+
+modelo2 <- nls(
+  y ~ a * exp(0.4 * x),
+  start = list(a = 2)
+)
+
+anova(modelo2, modelo1)
+```
+
+---
+
+### v. Análisis de residuales
+
+Al igual que en la regresión lineal, los residuos ayudan a determinar si el modelo representa adecuadamente los datos. Si aparece un patrón claro en la gráfica de residuos, puede ser una señal de que el modelo seleccionado no captura adecuadamente la relación.
+
+Calcule los residuos del modelo exponencial y construya una gráfica de residuos contra valores ajustados y un histograma de los errores.
+
+```r
+residuos <- residuals(modelo_nl)
+ajustados <- fitted(modelo_nl)
+
+plot(
+  ajustados,
+  residuos,
+  xlab = "Valores ajustados",
+  ylab = "Residuos"
+)
+
+abline(h = 0)
+
+hist(residuos)
+```
+
+# Lección 4. Regresión lineal múltiple
+
+### i. Método de mínimos cuadrados
+
+La regresión lineal múltiple amplía la regresión simple al permitir que una variable dependiente sea explicada por dos o más variables independientes.
+
+Su forma general es:
+
+$$
+Y=\beta_0+\beta_1X_1+\beta_2X_2+\cdots+\epsilon
+$$
+
+Cada coeficiente representa el cambio esperado en $Y$ asociado con una unidad adicional de esa variable, **manteniendo constantes las demás variables del modelo**.
+
+Una institución educativa desea explicar la **calificación final** mediante dos variables: horas de estudio y porcentaje de asistencia. Construya un modelo de regresión lineal múltiple.
+
+```r
+horas <- c(2, 3, 4, 5, 6, 7, 8, 9)
+asistencia <- c(60, 65, 70, 75, 80, 85, 90, 95)
+nota <- c(55, 60, 64, 70, 75, 80, 86, 92)
+
+datos <- data.frame(
+  horas,
+  asistencia,
+  nota
+)
+
+modelo_multiple <- lm(
+  nota ~ horas + asistencia,
+  data = datos
+)
+
+summary(modelo_multiple)
+```
+
+---
+
+### ii. Coeficientes de correlación, determinación y error estándar
+
+En regresión múltiple puede utilizarse una matriz de correlaciones para observar las relaciones lineales entre pares de variables.
+
+El $R^2$ indica la proporción de variabilidad explicada por el modelo. También resulta importante el **$R^2$ ajustado**, porque toma en cuenta el número de variables independientes incorporadas.
+
+El error estándar residual indica el tamaño aproximado de los errores de predicción del modelo.
+
+Utilizando los datos de horas de estudio, asistencia y calificación, calcule la matriz de correlaciones, $R^2$, $R^2$ ajustado y el error estándar residual.
+
+```r
+cor(datos)
+
+summary(modelo_multiple)$r.squared
+
+summary(modelo_multiple)$adj.r.squared
+
+summary(modelo_multiple)$sigma
+
+summary(modelo_multiple)
+```
+
+---
+
+### iii. Intervalos de confianza y predicción
+
+Los intervalos de confianza permiten estudiar la incertidumbre asociada con los coeficientes del modelo. Además, `predict()` permite obtener estimaciones para nuevas combinaciones de las variables independientes.
+
+En regresión múltiple también existe una diferencia entre el **intervalo de confianza de la respuesta media** y el **intervalo de predicción de una nueva observación**.
+
+Se desea estimar la calificación de un estudiante que estudia **7 horas** y presenta una **asistencia del 88 %**. Obtenga los intervalos de confianza de los coeficientes y los intervalos de confianza y predicción para el estudiante.
+
+```r
+confint(modelo_multiple)
+
+nuevo <- data.frame(
+  horas = 7,
+  asistencia = 88
+)
+
+predict(
+  modelo_multiple,
+  nuevo,
+  interval = "confidence"
+)
+
+predict(
+  modelo_multiple,
+  nuevo,
+  interval = "prediction"
+)
+```
