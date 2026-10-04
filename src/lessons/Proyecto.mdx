@@ -1,0 +1,432 @@
+---
+title: Proyecto Integrador
+order: 6
+---
+
+# Proyecto integrador
+
+# 1. Datos para el proyecto
+
+Se simular una población de **200 estudiantes como mínimo**.
+
+La base de datos deberá contener las siguientes variables:
+
+- Número o identificador del estudiante.
+- Edad.
+- Horas de estudio por semana.
+- Porcentaje de asistencia.
+- Calificación de Matemáticas.
+- Calificación de Estadística.
+- Indicación de si aprobó Matemáticas.
+- Indicación de si aprobó Estadística.
+
+Se considerará que un estudiante **aprueba cuando obtiene una calificación de 70 o más**.
+
+---
+
+# 2. Probabilidad condicional
+
+Utilizando los datos de aprobación de Matemáticas y Estadística:
+
+### Actividad 2.1
+
+Calcular:
+
+P(Matemáticas | Estadística)
+
+Es decir:
+
+**¿Cuál es la probabilidad de que un estudiante haya aprobado Matemáticas sabiendo que aprobó Estadística?**
+
+Se deberá:
+
+1. Contar cuántos estudiantes aprobaron Estadística.
+2. Contar cuántos aprobaron Matemáticas y Estadística.
+3. Aplicar la fórmula de probabilidad condicional.
+4. Realizar el cálculo también en R.
+5. Expresar el resultado como porcentaje.
+6. Explicar el resultado con palabras.
+
+### Actividad 2.2
+
+Calcular ahora:
+
+P(Estadística | Matemáticas)
+
+Responder:
+
+**¿Cuál es la probabilidad de aprobar Estadística sabiendo que el estudiante aprobó Matemáticas?**
+
+Finalmente, comparar los dos resultados y explicar si son iguales o diferentes.
+
+---
+
+# 3. Teorema de Bayes
+
+Utilizar los mismos datos para calcular:
+
+P(Matemáticas | Estadística)
+
+pero ahora mediante el teorema de Bayes.
+
+Se deberán identificar y calcular:
+
+- P(Matemáticas)
+- P(No Matemáticas)
+- P(Estadística | Matemáticas)
+- P(Estadística | No Matemáticas)
+- P(Estadística)
+
+Después aplicar:
+
+P(Matemáticas | Estadística) =
+[P(Estadística | Matemáticas) × P(Matemáticas)] / P(Estadística)
+
+### Entrega de esta sección
+
+Mostrar:
+
+1. Los valores utilizados.
+2. La sustitución en la fórmula.
+3. El código en R.
+4. El resultado.
+5. Una explicación del significado del resultado.
+
+---
+
+# 4. Distribución discreta: distribución binomial
+
+Calcular primero la proporción de estudiantes que aprobaron Estadística. Esta proporción se utilizará como probabilidad de éxito.
+
+Supóngase que se seleccionan **10 estudiantes al azar**.
+
+Calcular la probabilidad de que:
+
+a) Exactamente 6 aprueben Estadística.
+b) Exactamente 8 aprueben Estadística.
+c) Ninguno apruebe Estadística.
+
+Utilizar `dbinom()` en R.
+
+Después:
+
+1. Construir la distribución para los valores de 0 a 10 estudiantes aprobados.
+2. Elaborar una gráfica de barras.
+3. Identificar cuál es el número de aprobados con mayor probabilidad.
+4. Explicar qué representa la gráfica.
+
+---
+
+# 5. Distribución continua: distribución normal
+
+Utilizar las calificaciones de Estadística.
+
+Calcular:
+
+- Media.
+- Desviación estándar.
+
+Utilizando esos valores como parámetros de una distribución normal, calcular:
+
+a) Probabilidad de obtener una calificación menor o igual a 70.
+b) Probabilidad de obtener una calificación mayor a 80.
+c) Probabilidad de obtener una calificación entre 70 y 90.
+
+Utilizar `pnorm()`.
+
+Después elaborar una gráfica de la distribución normal correspondiente.
+
+### Interpretación
+
+Para cada resultado escribir una oración explicando su significado.
+
+Ejemplo:
+
+“De acuerdo con el modelo normal utilizado, la probabilidad de obtener una calificación superior a 80 es aproximadamente \_\_\_ %.”
+
+---
+
+# 6. Muestreo
+
+Considerar todos los estudiantes de la base de datos como la **población del ejercicio**.
+
+Primero calcular la media poblacional de las calificaciones de Estadística.
+
+Después obtener una muestra de **30 estudiantes** mediante:
+
+### A. Muestreo aleatorio simple
+
+Utilizar `sample()` para seleccionar aleatoriamente 30 estudiantes.
+
+Calcular la media de las calificaciones de la muestra.
+
+### B. Muestreo sistemático
+
+Seleccionar estudiantes utilizando un intervalo sistemático apropiado.
+
+Calcular nuevamente la media.
+
+### Comparación
+
+Presentar una tabla con:
+
+| Método           | Tamaño | Media obtenida |
+| ---------------- | -----: | -------------: |
+| Población        |        |                |
+| Aleatorio simple |     30 |                |
+| Sistemático      |     30 |                |
+
+Responder:
+
+- ¿Cuál muestra produjo una media más cercana a la media poblacional?
+- ¿Por qué las medias muestrales no son necesariamente iguales a la media poblacional?
+
+---
+
+# 7. Distribución muestral
+
+Utilizando la población anterior:
+
+### Experimento 1
+
+Tomar **1,000 muestras de 10 estudiantes** y calcular la media de cada muestra.
+
+### Experimento 2
+
+Tomar **1,000 muestras de 30 estudiantes** y calcular la media de cada muestra.
+
+### Experimento 3
+
+Tomar **1,000 muestras de 100 estudiantes** y calcular la media de cada muestra.
+
+Utilizar `replicate()` y `sample()`.
+
+Para cada experimento calcular:
+
+- Media de las 1,000 medias.
+- Desviación estándar de las 1,000 medias.
+
+Construir un histograma para cada distribución muestral.
+
+### Preguntas
+
+Responder:
+
+1. ¿Las medias de las distribuciones muestrales se encuentran cerca de la media poblacional?
+2. ¿Qué sucede con la dispersión cuando el tamaño de muestra aumenta?
+3. ¿Cuál distribución presenta mayor variabilidad?
+4. ¿Cuál presenta menor variabilidad?
+5. ¿Qué conclusión puede obtenerse sobre el efecto del tamaño de muestra?
+
+---
+
+# 8. Error de estimación y error estándar
+
+Seleccionar una muestra aleatoria de 30 estudiantes.
+
+Calcular:
+
+**Error de estimación = media muestral − media poblacional**
+
+Reportar:
+
+- Media poblacional.
+- Media muestral.
+- Error de estimación.
+
+Después calcular el error estándar de la media:
+
+SE = s / √n
+
+Comparar también el error estándar para:
+
+- n = 10
+- n = 30
+- n = 50
+- n = 100
+
+Elaborar una gráfica que muestre el tamaño de muestra en el eje X y el error estándar en el eje Y.
+
+### Explicar
+
+¿Qué sucede con el error estándar cuando aumenta el tamaño de la muestra?
+
+---
+
+# 9. Estimación puntual
+
+Seleccionar una muestra aleatoria de **50 estudiantes**.
+
+A partir de esa muestra estimar:
+
+### A. Media poblacional
+
+Utilizar la media de las calificaciones de Estadística como estimación de la media poblacional.
+
+### B. Proporción poblacional
+
+Calcular la proporción de estudiantes de la muestra que aprobaron Estadística.
+
+Presentar:
+
+- Media estimada.
+- Proporción estimada.
+- Porcentaje estimado de aprobación.
+
+Explicar por qué estos valores se denominan **estimaciones puntuales**.
+
+---
+
+# 10. Intervalo de confianza para una media
+
+Utilizando la muestra anterior de 50 estudiantes, calcular un intervalo de confianza del **95 %** para la media de las calificaciones de Estadística.
+
+Utilizar:
+
+`t.test()`
+
+Reportar:
+
+- Media muestral.
+- Límite inferior.
+- Límite superior.
+- Nivel de confianza utilizado.
+
+Finalmente, interpretar el intervalo obtenido.
+
+---
+
+# 11. Diferencia entre dos medias
+
+Dividir a los estudiantes en dos grupos:
+
+- **Grupo A:** asistencia de 80 % o más.
+- **Grupo B:** asistencia menor a 80 %.
+
+Calcular:
+
+1. Media de calificaciones del grupo A.
+2. Media de calificaciones del grupo B.
+3. Diferencia entre ambas medias.
+4. Intervalo de confianza para la diferencia mediante `t.test()`.
+
+Responder:
+
+- ¿Qué grupo presenta la media más alta?
+- ¿Cuál es la diferencia observada?
+- ¿Qué información proporciona el intervalo de confianza?
+
+---
+
+# 12. Diferencia entre dos proporciones
+
+Utilizar nuevamente los grupos definidos según asistencia.
+
+Para cada grupo determinar:
+
+- Número de estudiantes que aprobaron Estadística.
+- Número total de estudiantes.
+- Proporción de aprobados.
+
+Después utilizar `prop.test()` para comparar las proporciones.
+
+Presentar una tabla:
+
+| Grupo             | Aprobados | Total | Proporción |
+| ----------------- | --------: | ----: | ---------: |
+| Asistencia ≥ 80 % |           |       |            |
+| Asistencia < 80 % |           |       |            |
+
+Explicar los resultados obtenidos.
+
+---
+
+# 13. Límite de confianza de una cola
+
+Utilizar las calificaciones de Estadística para calcular un **límite inferior de confianza del 95 % para la media**.
+
+Utilizar:
+
+`t.test(datos, alternative = "greater", conf.level = 0.95)`
+
+Reportar el límite obtenido.
+
+Después explicar con palabras qué significa que se haya calculado solamente un límite inferior.
+
+---
+
+# 14. Tamaño de muestra
+
+Supóngase que la institución realizará un nuevo estudio para estimar la calificación media de sus estudiantes.
+
+Se desea:
+
+- Nivel de confianza: 95 %
+- Error máximo permitido: 2 puntos.
+- Utilizar como aproximación de σ la desviación estándar obtenida de los datos.
+
+Calcular:
+
+n = (Z × σ / E)²
+
+En R utilizar `qnorm()` para obtener el valor crítico Z.
+
+Finalmente utilizar `ceiling()` para redondear el resultado hacia arriba.
+
+### Responder
+
+1. ¿Cuál es el tamaño mínimo de muestra?
+2. ¿Por qué debe redondearse hacia arriba?
+3. ¿Qué sucedería con el tamaño requerido si se permitiera un error de 5 puntos en lugar de 2?
+4. ¿Qué sucedería si se exigiera mayor precisión?
+
+---
+
+# 15. Conclusiones
+
+Redactar una conclusión de aproximadamente **300 a 500 palabras**.
+
+La conclusión deberá responder, como mínimo:
+
+- ¿Qué se aprendió sobre probabilidad condicional y Bayes?
+- ¿Qué diferencia existe entre una distribución discreta y una continua?
+- ¿Por qué una muestra no produce exactamente los mismos resultados que la población?
+- ¿Cómo afecta el tamaño de muestra al error estándar?
+- ¿Cuál es la diferencia entre una estimación puntual y un intervalo de confianza?
+- ¿Por qué es importante expresar la incertidumbre al realizar una estimación?
+
+No se deberán limitar las conclusiones a repetir números. Se espera una interpretación de los resultados obtenidos.
+
+---
+
+# Formato de entrega
+
+Entregar **un solo reporte** en PDF.
+
+El documento deberá contener, en este orden:
+
+1. Portada.
+2. Introducción.
+3. Descripción de los datos.
+4. Probabilidad condicional.
+5. Teorema de Bayes.
+6. Distribución binomial.
+7. Distribución normal.ahr
+8. Muestreo.
+9. Distribución muestral.
+10. Error de estimación y error estándar.
+11. Estimación puntual.
+12. Intervalos de confianza.
+13. Diferencia de medias.
+14. Diferencia de proporciones.
+15. Límites de confianza.
+16. Tamaño de muestra.
+17. Conclusiones.
+
+En cada apartado deberán aparecer **el procedimiento, el código utilizado en R, el resultado y su interpretación**.
+
+## Importante
+
+No será suficiente copiar la salida generada por R.
+
+Cada resultado deberá estar acompañado de una explicación que demuestre que se comprende **qué se calculó, por qué se calculó y qué significa el resultado**.
