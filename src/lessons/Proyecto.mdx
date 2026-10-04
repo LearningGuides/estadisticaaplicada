@@ -22,6 +22,95 @@ La base de datos deberá contener las siguientes variables:
 
 Se considerará que un estudiante **aprueba cuando obtiene una calificación de 70 o más**.
 
+# ============================================================
+# SIMULACIÓN DE UNA POBLACIÓN DE 200 ESTUDIANTES
+# ============================================================
+
+# Número de estudiantes
+n <- 200
+
+# 1. Identificador del estudiante
+ID_Estudiante <- 1:n
+
+# 2. Edad (entre 17 y 25 años)
+Edad <- sample(17:25, n, replace = TRUE)
+
+# 3. Horas de estudio por semana (entre 1 y 30 horas)
+Horas_Estudio <- round(runif(n, min = 1, max = 30), 1)
+
+# 4. Porcentaje de asistencia (entre 50% y 100%)
+Asistencia <- round(runif(n, min = 50, max = 100), 1)
+
+# 5. Calificación de Matemáticas
+# Se relaciona con las horas de estudio y la asistencia
+Calificacion_Matematicas <- round(
+  35 +
+  1.2 * Horas_Estudio +
+  0.35 * Asistencia +
+  rnorm(n, mean = 0, sd = 10),
+  1
+)
+
+# Limitar las calificaciones al rango de 0 a 100
+Calificacion_Matematicas <- pmin(
+  pmax(Calificacion_Matematicas, 0),
+  100
+)
+
+# 6. Calificación de Estadística
+Calificacion_Estadistica <- round(
+  30 +
+  1.3 * Horas_Estudio +
+  0.40 * Asistencia +
+  rnorm(n, mean = 0, sd = 10),
+  1
+)
+
+# Limitar las calificaciones al rango de 0 a 100
+Calificacion_Estadistica <- pmin(
+  pmax(Calificacion_Estadistica, 0),
+  100
+)
+
+# 7. Indicar si aprobó Matemáticas
+# Se aprueba con una calificación de 70 o más
+Aprobo_Matematicas <- ifelse(
+  Calificacion_Matematicas >= 70,
+  "Sí",
+  "No"
+)
+
+# 8. Indicar si aprobó Estadística
+Aprobo_Estadistica <- ifelse(
+  Calificacion_Estadistica >= 70,
+  "Sí",
+  "No"
+)
+
+# ============================================================
+# CREAR LA BASE DE DATOS
+# ============================================================
+
+estudiantes <- data.frame(
+  ID_Estudiante,
+  Edad,
+  Horas_Estudio,
+  Asistencia,
+  Calificacion_Matematicas,
+  Calificacion_Estadistica,
+  Aprobo_Matematicas,
+  Aprobo_Estadistica
+)
+
+# Mostrar los primeros registros
+head(estudiantes)
+
+# Ver la estructura de la base de datos
+str(estudiantes)
+
+# Resumen estadístico
+summary(estudiantes)
+
 ---
 
 # 2. Probabilidad condicional
